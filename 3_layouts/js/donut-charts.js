@@ -10,7 +10,7 @@ const drawDonutCharts = (data) => {
 
   
   // The years for the dunut charts
-  const years = [1975, 1995, 2013];
+  const years = [1975, 1995, 2015];
   // The categories for the donut charts
   const formats = data.columns.filter(format =>
     format !== "year");
@@ -34,7 +34,7 @@ const drawDonutCharts = (data) => {
     const pieGenerator = d3.pie()
       .value(d => d.sales);
     const annotatedData = pieGenerator(formattedData);
-    
+
     // Make the container for the dunut chart, and translate it
     const donutContainer = donutContainers
       .append("g")
