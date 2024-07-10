@@ -1,5 +1,5 @@
 // Load the data here
-d3.csv("/2_curve/data/weekly_temperature.csv", d => {
+d3.csv("/2_line/data/weekly_temperature.csv", d => {
   return {
     date: new Date(d.date),
     avg_temp_C: (d.avg_temp_F - 32)*5/9,
