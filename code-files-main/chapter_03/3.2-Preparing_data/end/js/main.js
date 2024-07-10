@@ -32,3 +32,4 @@ d3.csv("../data/data.csv", d => {
 
 // Create the bar graph
 const createViz = (data) => {};
+
