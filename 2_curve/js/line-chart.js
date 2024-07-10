@@ -13,6 +13,8 @@ d3.csv("/2_curve/data/weekly_temperature.csv", d => {
 // Create the line chart here
 const drawLineChart = (data) => {
 
+  // ------ Create the drawing area ------- //
+
   // Create the margins and the inner chart dimensions
   const margin = {top: 40, right: 170, bottom: 25, left: 40};
   const width = 1000;
@@ -28,6 +30,8 @@ const drawLineChart = (data) => {
     .append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+  // ------ Create scales and axes ------- //
+
   // Create the x scale
   const firstDate = new Date(2021, 0o0, 0o1, 0, 0, 0);
   const lastDate = d3.max(data, d => d.date);
@@ -37,8 +41,9 @@ const drawLineChart = (data) => {
 
   // Create the y scale
   const maxTemp = d3.max(data, d => d.max_temp_C);
+  const minTemp = d3.min(data, d => d.min_temp_C);
   const yScale = d3.scaleLinear()
-    .domain([0, maxTemp])
+    .domain([minTemp, maxTemp])
     .range([innerHeight, 0]);
 
   // Create the buttom axis
@@ -75,4 +80,86 @@ const drawLineChart = (data) => {
     .text("Temperature (°C)")
     .attr("y", 20);
 
+  // ------ Create the drawings ------- //
+
+  // Color for the chart
+  const aubergine = "#75485E";
+
+  // Create the area
+  const areaGenerator = d3.area()
+    .x(d => xScale(d.date))
+    .y0(d => yScale(d.min_temp_C))
+    .y1(d => yScale(d.max_temp_C))
+    .curve(d3.curveCatmullRom);
+  innerChart
+    .append("path")
+      .attr("d", areaGenerator(data))
+      .attr("fill", aubergine)
+      .attr("fill-opacity", 0.2);
+  
+  // Create the circles
+  innerChart
+    .selectAll("circle")
+    .data(data)
+    .join("circle")
+      .attr("r", 4)
+      .attr("cx", d => xScale(d.date))
+      .attr("cy", d => yScale(d.avg_temp_C))
+      .attr("fill", aubergine);
+
+  // Create the lines
+  const lineGenerator = d3.line()
+    .x(d => xScale(d.date))
+    .y(d => yScale(d.avg_temp_C))
+    .curve(d3.curveCatmullRom);
+  innerChart
+    .append("path")
+      .attr("d", lineGenerator(data))
+      .attr("fill", "none")
+      .attr("stroke", aubergine);
+
+  // Label for the line
+  innerChart
+    .append("text")
+      .text("Average temperature")
+      .attr("x", xScale(lastDate) + 10)
+      .attr("y", yScale(data[data.length - 1].avg_temp_C))
+      .attr("dominant-baseline", "middle")
+      .attr("fill", aubergine);
+
+  // Label for the lowest temperature
+  innerChart
+    .append("text")
+      .text("Minimum temperature")
+      .attr("x", xScale(data[data.length - 3].date) + 13)
+      .attr("y", yScale(data[data.length - 3].min_temp_C) + 20)
+      .attr("alignment-baseline", "hanging")
+      .attr("fill", aubergine);
+  innerChart
+    .append("line")
+      .attr("x1", xScale(data[data.length - 3].date))
+      .attr("y1", yScale(data[data.length - 3].min_temp_C) + 3)
+      .attr("x2", xScale(data[data.length - 3].date) + 10)
+      .attr("y2", yScale(data[data.length - 3].min_temp_C) + 20)
+      .attr("stroke", aubergine)
+      .attr("stroke-width", 2);
+
+  // Label for the highest temperature
+  innerChart
+    .append("text")
+      .text("Maximum temperature")
+      .attr("x", xScale(data[data.length - 4].date) + 13)
+      .attr("y", yScale(data[data.length - 4].max_temp_C) - 20)
+      .attr("fill", aubergine);
+  innerChart
+    .append("line")
+      .attr("x1", xScale(data[data.length - 4].date))
+      .attr("y1", yScale(data[data.length - 4].max_temp_C) - 3)
+      .attr("x2", xScale(data[data.length - 4].date) + 10)
+      .attr("y2", yScale(data[data.length - 4].max_temp_C) - 20)
+      .attr("stroke", aubergine)
+      .attr("stroke-width", 2);
+
+
+  
 };
