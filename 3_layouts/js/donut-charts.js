@@ -35,6 +35,8 @@ const drawDonutCharts = (data) => {
       .value(d => d.sales);
     const annotatedData = pieGenerator(formattedData);
 
+    console.log(annotatedData);
+
     // Make the container for the dunut chart, and translate it
     const donutContainer = donutContainers
       .append("g")
@@ -53,10 +55,44 @@ const drawDonutCharts = (data) => {
     const arcs = donutContainer
       .selectAll(`.arc-${year}`)
       .data(annotatedData)
-      .join("path")
-        .attr("class", d => `arc-${year}`)
+      .join("g")
+        .attr("class", d => `arc-${year}`);
+    arcs
+      .append("path")
         .attr("d", arcGenerator)
         .attr("fill", d => colorScale(d.data.format));
+
+    // Add the labels
+    arcs
+      .append("text")
+        .text(d => {
+          d["percentage"] = (d.endAngle - d.startAngle) / (2 * Math.PI);
+          return d3.format(".0%")(d.percentage);
+        })
+        .attr("x", d => {
+          d["centroid"] = arcGenerator
+            .startAngle(d.startAngle)
+            .endAngle(d.endAngle)
+            .centroid();
+          return d.centroid[0];
+        })
+        .attr("y", d => d.centroid[1])
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .attr("fill", "#f6fafc")
+        .attr("fill-opacity", d => d.percentage < 0.05 ? 0 : 1)
+        .style("font-size", "16px")
+        .style("font-weight", 500);
+    
+    // Add the year in the center
+    donutContainer
+      .append("text")
+        .text(year)
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .style("font-size", "24px")
+        .style("font-weight", 500);
+        
   });
 
 };
