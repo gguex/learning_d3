@@ -4,7 +4,7 @@ const svg = d3.select(".responsive-svg-container")
     .attr("viewBox", "0 0 600 700");
 
 // Load the data
-d3.csv("../data/data.csv", d => {
+d3.csv("/1_histogram/data/data.csv", d => {
   return {
     technology: d.technology,
     count: +d.count
