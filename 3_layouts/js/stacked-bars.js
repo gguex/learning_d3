@@ -25,8 +25,7 @@ const drawStackedBars = (data) => {
     .range([innerHeight, 0])
     .nice();
 
-  console.log(annotatedData);
-  // Make the x-axis
+  // Make the stack of bars
   annotatedData.forEach(series => {
     innerChart
       .selectAll(`.bar-${series.key}`)
@@ -39,15 +38,14 @@ const drawStackedBars = (data) => {
         .attr("fill", colorScale(series.key));
   });
 
+  // Make the axes
   const bottomAxis = d3.axisBottom(xScale)
     .tickValues(d3.range(1975, 2020, 5))
     .tickSizeOuter(0);
-
   innerChart
     .append("g")
     .attr("transform", `translate(0, ${innerHeight})`)
     .call(bottomAxis);
-
   const leftAxis = d3.axisLeft(yScale);
   innerChart
     .append("g")
