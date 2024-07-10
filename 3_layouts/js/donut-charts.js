@@ -34,9 +34,7 @@ const drawDonutCharts = (data) => {
     const pieGenerator = d3.pie()
       .value(d => d.sales);
     const annotatedData = pieGenerator(formattedData);
-
-    console.log(annotatedData);
-
+    
     // Make the container for the dunut chart, and translate it
     const donutContainer = donutContainers
       .append("g")

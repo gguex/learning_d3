@@ -1,7 +1,7 @@
 const drawStreamGraph = (data) => {
-  // Generate the streamgraph here
-  
+  // Generate the stacked bar chart here
 
+  
   /*******************************/
   /*    Append the containers    */
   /*******************************/
