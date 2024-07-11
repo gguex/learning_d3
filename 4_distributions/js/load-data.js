@@ -15,8 +15,6 @@ d3.csv("./data/data.csv", d => {
     };
   }
 }).then(data => {
-  console.log("data", data);
-
   drawHistogram(data);
   drawPyramid(data);
   drawBoxplot(data);
