@@ -13,15 +13,17 @@ const drawStackedBars = (data) => {
 
   // Create the stack generator 
   const stackGenerator = d3.stack()
-    .keys(formatsInfo.map(f => f.id));
+    .keys(formatsInfo.map(f => f.id))
+    .offset(d3.stackOffsetExpand);
 
   // Annotate the data with the stack generator
   const annotatedData = stackGenerator(data);
 
-  // Define the scales
-  const maxUpperBoundary = d3.max(annotatedData[annotatedData.length - 1], d => d[1]);
+  // Get the minimum and maximum values for the y scale
+  const maxUpperBoundary = d3.max(annotatedData, d => d3.max(d, d => d[1]));
+  const minLowerBoundary = d3.min(annotatedData, d => d3.min(d, d => d[0]));
   const yScale = d3.scaleLinear()
-    .domain([0, maxUpperBoundary])
+    .domain([minLowerBoundary, maxUpperBoundary])
     .range([innerHeight, 0])
     .nice();
 

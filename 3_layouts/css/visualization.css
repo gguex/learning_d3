@@ -10,3 +10,11 @@
   font-size: 14px;
   font-weight: 500;
 }
+
+.x-axis-streamgraph path {
+  stroke-opacity: 0;
+}
+
+.x-axis-streamgraph text {
+  fill-opacity: 0;
+}
